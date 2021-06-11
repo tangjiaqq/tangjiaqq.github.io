@@ -4,7 +4,7 @@ name: Blog CI/CD
 on:
   push:
     branches: 
-      - master
+      - xxx  # 不启用
 
 env:
   TZ: Asia/Shanghai
@@ -42,7 +42,7 @@ jobs:
       run: |
         hexo clean
         hexo generate
-        
+
     - name: Deploy hexo blog
       env: 
         # Github 仓库
