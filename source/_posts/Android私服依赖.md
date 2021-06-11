@@ -1,8 +1,12 @@
 ---
 title: Android私服依赖
 date: 2019-06-11 12:48:03
-tags:
 description: Android私服依赖发布（本地文件夹）
+categories:
+- Android
+tags: 
+- Gradle
+- 私服
 ---
 
 ```groovy
