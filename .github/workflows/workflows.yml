@@ -1,11 +1,9 @@
 name: Blog CI/CD
-
 # 触发条件：在 push 到 hexo-blog-backup 分支后触发
 on:
   push:
     branches: 
-      - xxx  # 不启用
-
+      - master
 env:
   TZ: Asia/Shanghai
 
@@ -35,6 +33,8 @@ jobs:
       # 下载 hexo-cli 脚手架及相关安装包
       run: |
         npm install hexo-cli gulp -g
+        # npm i hexo-theme-butterfly
+        # npm install hexo-renderer-pug hexo-renderer-stylus --save
         npm install
 
     - name: Generate files
@@ -54,4 +54,4 @@ jobs:
         git config user.email "tangjiaqq@gmail.com"
         git add .
         git commit -m "GitHub Actions Auto Builder at $(date +'%Y-%m-%d %H:%M:%S')"
-        git push --force --quiet "https://${{ secrets.ACCESS_TOKEN }}@$GITHUB_REPO" master:hexo
+        git push --force --quiet "https://${{ secrets.ACCESS_TOKEN }}@$GITHUB_REPO" hexo-blog-backup:hexo
