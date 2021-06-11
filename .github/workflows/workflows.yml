@@ -35,6 +35,7 @@ jobs:
         npm install hexo-cli gulp -g
         # npm i hexo-theme-butterfly
         # npm install hexo-renderer-pug hexo-renderer-stylus --save
+        npm install https://github.com/CodeFalling/hexo-asset-image --save
         npm install
 
     - name: Generate files
