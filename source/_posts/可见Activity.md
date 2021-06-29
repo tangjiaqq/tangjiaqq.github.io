@@ -2,7 +2,7 @@
 title: 可见Activity(当前页面的Activity名称)
 date: 2019-06-20 17:37:54
 tags:
-description:
+description: 可见Activity(当前页面的Activity名称)
 categories:
 - Android
 ---
