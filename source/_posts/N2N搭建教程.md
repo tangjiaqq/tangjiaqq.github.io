@@ -7,11 +7,11 @@ description: N2N异地组网搭建教程
 categories:
 - 异地组网
 ---
-##### n2n搭建教程
+
 
 ##   Centos 安装教程
 
-1. ```sh
+ ```sh
    1. yum install subversion gcc-c++ openssl-devel git cmake  # 安装所需依赖包
    2. git clone  https://github.com/meyerd/n2n.git # (此版本是N2N_v2s 版本必须相同方可使用)
    3. cd n2n/n2n_v2
@@ -27,15 +27,15 @@ categories:
        # -k 是密码
        #-a 是本地边缘节点的ip
        #-l 是服务器的IP:port
-   ```
+ ```
 
 
 
-   ## Windows：
+   ## Windows
 
    下载一个n2n_v2s的客户端即可
 
-   ## MAC:
+   ## MAC
 
    mac 安装比较麻烦：
 
@@ -68,7 +68,7 @@ categories:
 
    ```
 
-OpenWrt
+##    OpenWrt
 
 ```shell
     路由器k2   n2n_v2s

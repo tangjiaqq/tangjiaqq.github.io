@@ -8,10 +8,10 @@ categories:
 ---
 
 ```shell
-Win平台
+Linux平台
 adb shell dumpsys activity | grep "mFocusedActivity" 查看顶层Activity  <8.0 
 adb shell dumpsys activity | grep "mResumedActivity" 查看顶层Activity  8.0>=
-Linux平台
+Win平台
 adb shell dumpsys activity | findstr "mFocusedActivity" 查看顶层Activity  <8.0
 adb shell dumpsys activity | findstr "mResumedActivity" 查看顶层Activity  8.0>=
 
