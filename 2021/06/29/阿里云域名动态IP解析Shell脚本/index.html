@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"tangjiaqq.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="通过域名访问动态公网ip的主机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云域名动态IP解析Shell脚本">
+<meta property="og:url" content="https://tangjiaqq.github.io/2021/06/29/%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D%E5%8A%A8%E6%80%81IP%E8%A7%A3%E6%9E%90Shell%E8%84%9A%E6%9C%AC/index.html">
+<meta property="og:site_name" content="Mr Xin">
+<meta property="og:description" content="通过域名访问动态公网ip的主机">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-29T04:37:54.000Z">
+<meta property="article:modified_time" content="2021-06-29T05:22:26.947Z">
+<meta property="article:author" content="Xin">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://tangjiaqq.github.io/2021/06/29/%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D%E5%8A%A8%E6%80%81IP%E8%A7%A3%E6%9E%90Shell%E8%84%9A%E6%9C%AC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>阿里云域名动态IP解析Shell脚本 | Mr Xin</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Mr Xin</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-commonweal">
+
+    <a href="/404/" rel="section"><i class="fa fa-fw fa-heartbeat"></i>公益 404</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://tangjiaqq.github.io/2021/06/29/%E9%98%BF%E9%87%8C%E4%BA%91%E5%9F%9F%E5%90%8D%E5%8A%A8%E6%80%81IP%E8%A7%A3%E6%9E%90Shell%E8%84%9A%E6%9C%AC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Xin">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Mr Xin">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          阿里云域名动态IP解析Shell脚本
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-06-29 12:37:54" itemprop="dateCreated datePublished" datetime="2021-06-29T12:37:54+08:00">2021-06-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DDNS/" itemprop="url" rel="index"><span itemprop="name">DDNS</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">通过域名访问动态公网ip的主机</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="使用步骤："><a href="#使用步骤：" class="headerlink" title="使用步骤："></a>使用步骤：</h2><ul>
+<li>在阿里云域名管理中解析自己的域名<ul>
+<li>记录类型：A</li>
+<li>主机记录：按你需要输入</li>
+<li>解析路线：默认（随你）</li>
+<li>记录值：随便输入一个Ip地址（运行脚本后会自动更新到正确的）</li>
+<li>TTL值：10分钟</li>
+</ul>
+</li>
+<li>需要通过阿里云域名解析Api操作，所以需要申请阿里云的Acesskeys<ul>
+<li>登录阿里云 控制台 <a target="_blank" rel="noopener" href="https://account.aliyun.com/login/login.htm">https://account.aliyun.com/login/login.htm</a></li>
+<li>新建子账号（随你，用主账号也行）<a target="_blank" rel="noopener" href="https://ram.console.aliyun.com/users">https://ram.console.aliyun.com/users</a></li>
+<li>创建新的AccessKey <a target="_blank" rel="noopener" href="https://ram.console.aliyun.com/users/domian">https://ram.console.aliyun.com/users/domian</a></li>
+<li>给子账号授权：权限管理-个人权限 权限策略名称：AliyunDNSFullAccess</li>
+</ul>
+</li>
+<li>运行自动解析域名脚本<ul>
+<li>git clone <a target="_blank" rel="noopener" href="https://github.com/risfeng/aliyun-ddns-shell.git">https://github.com/risfeng/aliyun-ddns-shell.git</a></li>
+<li>给aliyun-ddns.sh脚本赋可执行权：<code>chmod +x aliyun-ddns-shell/src/aliyun/aliyun-ddns.sh</code></li>
+<li>运行脚本，根据提示进行配置（第一次运行需要配置）</li>
+<li>如需要使用钉钉自定义机器人推送成功失败消息，请新建自定义钉钉机器人，配置access_token和消息加签密钥</li>
+<li>脚本支持2种运行方式：<ul>
+<li>直接运行脚本根据提示选择需要使用的功能（获取公网IP的url 请设置为:ip.sb,脚本内置的已失效)<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&gt; aliyun-ddns.<span class="keyword">sh </span>(mac: &gt; <span class="keyword">bash </span>aliyun-ddns.<span class="keyword">sh)</span></span><br><span class="line"><span class="keyword"></span><span class="number">1</span>.配置并执行脚本</span><br><span class="line"><span class="number">2</span>.仅配置</span><br><span class="line"><span class="number">3</span>.仅执行脚本</span><br><span class="line"><span class="number">4</span>.恢复出厂设置</span><br><span class="line"><span class="number">5</span>.清理日志文件</span><br><span class="line"><span class="number">0</span>.退出</span><br></pre></td></tr></table></figure></li>
+<li>带参数运行：<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">aliyun-ddns.<span class="keyword">sh</span> -config -<span class="keyword">run</span>     配置并执行脚</span><br><span class="line">aliyun-ddns.<span class="keyword">sh</span> -<span class="keyword">run</span>             执行脚本（前提需要有配置文件）</span><br><span class="line">aliyun-ddns.<span class="keyword">sh</span> -config          仅配置信息</span><br><span class="line">aliyun-ddns.<span class="keyword">sh</span> -<span class="keyword">restore</span>         恢复出厂设置（会清除配置文件等）</span><br><span class="line">aliyun-ddns.<span class="keyword">sh</span> -clearn          清理日志文件</span><br><span class="line">aliyun-ddns.<span class="keyword">sh</span> -<span class="keyword">version</span>         显示脚本说明及版本信息</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>实时监听外网IP变更后自动解析到域名<ul>
+<li>利用定时任务服务：crond</li>
+<li>检测是否安装：<code>crond -V</code> 有输出版本号即已安装。</li>
+<li>如未安装：<code>yum install vixie-cron crontabs -y</code> 如有疑问请自行查找资料解决</li>
+<li>crond服务常用命令<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">service crond status   <span class="comment"># 查看服务运行状态  </span></span><br><span class="line">service crond <span class="literal">start</span>    <span class="comment"># 启动服务</span></span><br><span class="line">service crond <span class="literal">stop</span>     <span class="comment"># 停止服务 </span></span><br><span class="line">service crond restart  <span class="comment"># 重启服务  </span></span><br><span class="line">service crond reload   <span class="comment"># 不中断服务,重新载入配置 </span></span><br><span class="line">crontab -e             <span class="comment"># 编辑配置文件 </span></span><br><span class="line">crontab -l             <span class="comment"># 列出某个用户的任务计划</span></span><br></pre></td></tr></table></figure></li>
+<li>配置任务定时任务<ul>
+<li>建议不要把任务执行频率设置小于等10，因为域名解析记录生效时间最短理论上是10分钟，往往都会超过10分，建议15-20分钟。</li>
+<li>开始配置<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">crontab -e</span><br><span class="line"><span class="comment"># 按i进入标记模式</span></span><br><span class="line"><span class="comment"># 输入：</span></span><br><span class="line">*<span class="regexp">/20 * * * * XXXXXX/</span>aliyun-ddns-shell<span class="regexp">/src/</span>aliyun<span class="regexp">/aliyun-ddns.sh -run &gt;&gt; XXXX/</span>aliyun-ddns-shell<span class="regexp">/src/</span>aliyun/crontab-log.log</span><br><span class="line"><span class="comment"># 说明：</span></span><br><span class="line"><span class="comment"># */20 * * * * ：每20分钟执行一次 需要执行都脚本全路径 &gt;&gt; 执行日志输出位置全路径</span></span><br><span class="line"><span class="comment"># 按 esc 后 输入:wq 回车 保存并退出</span></span><br></pre></td></tr></table></figure></li>
+<li>重新加载配置：<code>service crond reload</code></li>
+<li>注意观察任务是否成功执行，如有疑问请自行百度</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/05/Centos-XRDP%E5%AE%89%E8%A3%85/" rel="prev" title="Centos_XRDP安装">
+      <i class="fa fa-chevron-left"></i> Centos_XRDP安装
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">使用步骤：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Xin"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Xin</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xin</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
